@@ -1,5 +1,6 @@
 {
   "name": "MERN-boilerplate",
+  "main": "./server/server.js",
   "version": "1.0.0",
   "description": "MERN stack project boilerplate",
   "author": "Eugene Cheung",
