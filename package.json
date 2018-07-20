@@ -2,8 +2,8 @@
   "name": "MERN-boilerplate",
   "main": "./server/server.js",
   "version": "1.0.0",
-  "description": "MERN stack project boilerplate",
-  "author": "Eugene Cheung",
+  "description": "FreeCodeCamp Project Pinterest Clone - Minterest",
+  "author": "Anthony Mitchell",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/arkon/MERN-boilerplate.git"
