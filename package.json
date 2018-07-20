@@ -1,6 +1,7 @@
 {
   "name": "MERN-boilerplate",
   "main": "./server/server.js",
+  "root": "./dist",
   "version": "1.0.0",
   "description": "FreeCodeCamp Project Pinterest Clone - Minterest",
   "author": "Anthony Mitchell",
