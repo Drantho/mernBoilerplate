@@ -1,6 +1,6 @@
 {
   "name": "MERN-boilerplate",
-  "main": "./server/server.js",
+  "main": "./dist/js/app.js",
   "root": "./dist",
   "version": "1.0.0",
   "description": "FreeCodeCamp Project Pinterest Clone - Minterest",
