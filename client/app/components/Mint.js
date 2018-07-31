@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faEllipsisV } from '@fortawesome/free-solid-svg-icons'
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 library.add(faUser, faEllipsisV)
 
@@ -16,13 +17,19 @@ const styles = theme => ({
       width: 343,
       marginTop: 15,
       marginLeft: 30,
-      marginRight: 0,      
+      marginRight: 0, 
+      marginBottom: 15,     
     },
     container: {
         paddingTop: 15,
         paddingBottom: 0,
         paddingLeft: 15,
         paddingRight: 15
+    },
+    actions: {
+        padding: 0,
+        marginLeft: -10,
+        marginRight: -15
     }
   });
 
@@ -46,29 +53,26 @@ class Mint extends React.Component {
 
         return (
             <div className={classes.galleryClass}>
-                <Paper className={classes.container} elevation={10}>     
+                <Card className={classes.container} elevation={10}>                 
+
                     <a href="#">               
                         <img className="mint" src={this.props.src} />
                     </a>
-                    <IconButton>
-                        <img src="assets/img/leaf.png" className="mintIt" title="Mint it!"/>
+
+                    <CardActions className={classes.actions} disableActionSpacing>
+                    <IconButton aria-label="Add to favorites">
+                        <img src='../assets/img/leaf.png' style={{width: '45%'}}/>
                     </IconButton>
-                    <div className="userInfo">
-                        <IconButton className='iconButtons'>
-                            <FontAwesomeIcon style={{color: "#ff5722"}}   icon="user"/>
-                        </IconButton>
-                        
-                        
-                        <IconButton className='iconButtons'
-                            aria-owns={open ? 'menu-appbar' : null}
-                            aria-haspopup="true"
-                            onClick={this.handleMenu}
-                            color="inherit"
-                        >
-                        
-                            <FontAwesomeIcon style={{color: "#ff5722"}}   icon="ellipsis-v"/>
-                        
-                        </IconButton>
+
+                    <IconButton 
+                        style={{marginLeft: 'auto'}} 
+                        aria-label="Share"
+                        onClick={this.handleMenu}
+                        aria-owns={open ? 'menu-appbar' : null}
+                    >
+                      <MoreVertIcon />
+                    </IconButton>
+                  </CardActions>
                         
                         <Menu
                             id="menu-appbar"
@@ -88,7 +92,8 @@ class Mint extends React.Component {
                         <MenuItem onClick={this.handleClose}>View Mint</MenuItem>
                         <MenuItem onClick={this.handleClose}>View User</MenuItem>
                         <MenuItem onClick={this.handleClose}>Not Interested</MenuItem>
-                        <MenuItem onClick={this.handleClose}>Report</MenuItem>
+                        <MenuItem onClick={this.handleClose}>Report Spam</MenuItem>
+                        <MenuItem onClick={this.handleClose}>Report Inappropriate</MenuItem>
                     </Menu>
 
 
@@ -96,10 +101,7 @@ class Mint extends React.Component {
 
 
 
-                            
-                        
-                    </div>
-                </Paper>
+                </Card>
             </div>
         );
     }

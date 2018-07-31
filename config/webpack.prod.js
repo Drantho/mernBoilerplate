@@ -22,5 +22,9 @@ module.exports = merge(commonConfig, {
         comments: false
       }
     })
-  ]
+  ],
+  alias: {
+    'assets': path.resolve('dist/assets'), // This is ours!!
+    'react-native': 'react-native-web'
+  },
 });
