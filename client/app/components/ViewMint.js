@@ -159,7 +159,7 @@ class RecipeReviewCard extends React.Component {
                     onClose={this.handleClose}
                 >
                     <MenuItem onClick={this.handleClose}>Mint It!</MenuItem>
-                    <MenuItem onClick={this.handleClose}>View User</MenuItem>
+                    <Link to='/User/Drantho'><MenuItem onClick={this.handleClose}>View User</MenuItem></Link>
                     <MenuItem onClick={this.handleClose}>Not Interested</MenuItem>
                     <MenuItem onClick={this.handleClose}>Report Spam</MenuItem>
                     <MenuItem onClick={this.handleClose}>Report Inappropriate</MenuItem>

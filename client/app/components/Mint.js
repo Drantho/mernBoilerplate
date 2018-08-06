@@ -9,6 +9,12 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { Link } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
+import createHistory from 'history/createBrowserHistory'
+import Button from '@material-ui/core/Button';
+
+const history = createHistory();
 
 library.add(faUser, faEllipsisV)
 
@@ -55,9 +61,9 @@ class Mint extends React.Component {
             <div className={classes.galleryClass}>
                 <Card className={classes.container} elevation={10}>                 
 
-                    <a href="#">               
+                    <Link to='/ViewMint'>          
                         <img className="mint" src={this.props.src} />
-                    </a>
+                    </Link>
 
                     <CardActions className={classes.actions} disableActionSpacing>
                     <IconButton aria-label="Add to favorites">
@@ -89,8 +95,8 @@ class Mint extends React.Component {
                             onClose={this.handleClose}
                         >
                         <MenuItem onClick={this.handleClose}>Mint It!</MenuItem>
-                        <MenuItem onClick={this.handleClose}>View Mint</MenuItem>
-                        <MenuItem onClick={this.handleClose}>View User</MenuItem>
+                        <Link to='/ViewMint'><MenuItem >View Mint</MenuItem></Link>
+                        <Link to='/User/Drantho'><MenuItem >View User</MenuItem></Link>
                         <MenuItem onClick={this.handleClose}>Not Interested</MenuItem>
                         <MenuItem onClick={this.handleClose}>Report Spam</MenuItem>
                         <MenuItem onClick={this.handleClose}>Report Inappropriate</MenuItem>
