@@ -230,7 +230,7 @@ class User extends React.Component {
 
           <h1 className='pageTitle'>{this.props.match.params.uid}</h1>
           <span style={{width: 40}}>
-            <Avatar style={{verticalAlign: 'middle', marginRight: 10}} src="../assets/img/users/1.jpg" />
+            <Avatar style={{verticalAlign: 'middle', marginRight: 10}} src="../assets/img/user1.jpg" />
           </span>
           <span style={{width: 200}}>
             <strong>User Name:</strong>{this.props.match.params.name}<br/>          
