@@ -169,6 +169,7 @@ import UserListItem from './UserListItem';
 import Masonry from 'react-masonry-component';
 import Mint from './Mint';
 import Avatar from '@material-ui/core/Avatar';
+import Paper from '@material-ui/core/Paper';
 
 function TabContainer({ children, dir }) {
   return (
@@ -258,30 +259,34 @@ class User extends React.Component {
         >
         
           <TabContainer dir={theme.direction}>
-            <h1>Followers ({followers.length})</h1>
-            {
-              followers.map(
-                function(item, i){
-                  return <UserListItem 
-                    key={i} 
-                    name={item.name.firstName + ' ' + item.name.lastName}
-                  />
-                }
-              )
-            }
+            <Paper  className='subContainer'>
+              <h1>Followers ({followers.length})</h1>
+              {
+                followers.map(
+                  function(item, i){
+                    return <UserListItem 
+                      key={i} 
+                      name={item.name.firstName + ' ' + item.name.lastName}
+                    />
+                  }
+                )
+              }
+            </Paper>
           </TabContainer>
           <TabContainer dir={theme.direction}>
-          <h1>Following ({following.length})</h1>
-          {
-            following.map(
-              function(item, i){
-                return <UserListItem 
-                  key={i} 
-                  name={item.name.firstName + ' ' + item.name.lastName}
-                />
+            <Paper  className='subContainer'>
+              <h1>Following ({following.length})</h1>
+              {
+                following.map(
+                  function(item, i){
+                    return <UserListItem 
+                      key={i} 
+                      name={item.name.firstName + ' ' + item.name.lastName}
+                    />
+                  }
+                )
               }
-            )
-          }
+            </Paper>
           </TabContainer>
           <TabContainer dir={theme.direction}>
 

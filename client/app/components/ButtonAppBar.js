@@ -5,6 +5,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import MenuDrawer from './MenuDrawer';
 import { Button } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 const styles = (theme) => ({
     button: {
@@ -43,14 +44,18 @@ class MenuAppBar extends React.Component {
                             <div style={{position: 'absolute', right: 0, marginRight: 25}}>  
                                 <MenuDrawer/>
                                 <Toolbar className={classes.toolBar}>  
-                                    <Button className={classes.button}>
-                                        <h3>Profile</h3>
-                                    </Button>
+                                    <Link to="/Profile" className="buttonAppBarLink">
+                                        <Button className={classes.button}>
+                                            <h3>Profile</h3>
+                                        </Button>
+                                    </Link>
                                 </Toolbar>
                                 <Toolbar className={classes.toolBar}>  
-                                    <Button className={classes.button}>
-                                        <h3>All Mints</h3>
-                                    </Button>
+                                    <Link to="/" className="buttonAppBarLink">
+                                        <Button className={classes.button}>
+                                            <h3>All Mints</h3>
+                                        </Button>
+                                    </Link>
                                 </Toolbar>
                                 <Toolbar className={classes.toolBar}>  
                                     <Button className={classes.button}>

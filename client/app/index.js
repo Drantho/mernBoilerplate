@@ -19,6 +19,10 @@ import NewMint from './components/NewMint';
 
 import ViewMint from './components/ViewMint';
 
+import SignUp from './components/SignUp';
+
+import Profile from './components/Profile';
+
 import './styles/styles.scss';
 
 render((
@@ -29,6 +33,8 @@ render((
         <Route path="/User/:uid" component={User}/>
         <Route path="/NewMint" component={NewMint}/>
         <Route path="/ViewMint" component={ViewMint}/>
+        <Route path="/SignUp" component={SignUp}/>
+        <Route path="/Profile" component={Profile}/>
         <Route component={NotFound}/>
       </Switch>
     </App>
