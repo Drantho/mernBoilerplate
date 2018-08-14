@@ -61,7 +61,7 @@ class Mint extends React.Component {
             <div className={classes.galleryClass}>
                 <Card className={classes.container} elevation={10}>                 
 
-                    <Link to='/ViewMint'>          
+                    <Link to={'/ViewMint/' + this.props.mintId}>          
                         <img className="mint" src={this.props.src} />
                     </Link>
 
@@ -95,8 +95,8 @@ class Mint extends React.Component {
                             onClose={this.handleClose}
                         >
                         <MenuItem onClick={this.handleClose}>Mint It!</MenuItem>
-                        <Link to='/ViewMint'><MenuItem >View Mint</MenuItem></Link>
-                        <Link to='/User/Drantho'><MenuItem >View User</MenuItem></Link>
+                        <Link to={'/ViewMint/' + this.props.mintId}><MenuItem >View Mint</MenuItem></Link>
+                        <Link to={'/User/' + this.props.owner}><MenuItem >View User</MenuItem></Link>
                         <MenuItem onClick={this.handleClose}>Not Interested</MenuItem>
                         <MenuItem onClick={this.handleClose}>Report Spam</MenuItem>
                         <MenuItem onClick={this.handleClose}>Report Inappropriate</MenuItem>

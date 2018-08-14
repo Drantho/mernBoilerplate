@@ -50,11 +50,44 @@ const mint={
 }
 
 class RecipeReviewCard extends React.Component {
-    state = { 
-        anchorEl: null,
-        expanded: false,
-        modalOpen: false, 
-    };
+    constructor(){
+        super();
+        this.state = { 
+            anchorEl: null,
+            expanded: false,
+            modalOpen: false,
+            mint: {
+                title: '',
+                src: '',
+                link: '',
+                description: '',
+                categories: []
+            } 
+        };
+    }
+
+    componentDidMount(){
+        console.log('searching mint ' + this.props.match.params.mintId);
+        fetch('/api/GetMint', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                mint: this.props.match.params.mintId
+            })
+        }).then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            console.log('search successful.');
+            console.log(data);
+            this.setState({
+                mint: data
+            });
+        }.bind(this));
+    
+    }    
 
     handleMenu = event => {
         this.setState({ anchorEl: event.currentTarget });
@@ -108,11 +141,11 @@ class RecipeReviewCard extends React.Component {
                             <MoreVertIcon />
                         </IconButton>
                     }
-                    title={mint.title}
-                    subheader={mint.date}
+                    title={this.state.mint.title}
+                    subheader={this.state.mint.date}
                 />
                 <ButtonBase onClick={this.handleModalOpen} style={{width: '100%'}}>
-                    <img src={mint.src} style={{width: '100%'}}/>
+                    <img src={this.state.mint.src} style={{width: '100%'}}/>
                 </ButtonBase>
                 
                 <CardActions className={classes.actions} disableActionSpacing>
@@ -138,7 +171,7 @@ class RecipeReviewCard extends React.Component {
                     onClose={this.handleModalClose}
                 >
                     <div style={getModalStyle()} className={classes.paper}>
-                        <img src={mint.src}/>
+                        <img src={this.state.mint.src}/>
                     </div>
                 </Modal>
                 <Menu
@@ -156,7 +189,7 @@ class RecipeReviewCard extends React.Component {
                     onClose={this.handleClose}
                 >
                     <MenuItem onClick={this.handleClose}>Mint It!</MenuItem>
-                    <Link to='/User/Drantho'><MenuItem onClick={this.handleClose}>View User</MenuItem></Link>
+                    <Link to={'/User/' + this.state.mint.owner }><MenuItem >View User</MenuItem></Link>
                     <MenuItem onClick={this.handleClose}>Not Interested</MenuItem>
                     <MenuItem onClick={this.handleClose}>Report Spam</MenuItem>
                     <MenuItem onClick={this.handleClose}>Report Inappropriate</MenuItem>
@@ -164,7 +197,7 @@ class RecipeReviewCard extends React.Component {
                 <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
                     <CardContent>
                         <Typography paragraph>
-                            {mint.description}
+                            {this.state.mint.description}
                         </Typography>
                     </CardContent>
                 </Collapse>

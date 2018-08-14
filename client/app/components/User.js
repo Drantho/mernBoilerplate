@@ -207,11 +207,49 @@ class User extends React.Component {
 
   constructor(props) {
     super(props);
+
+    console.log('constructor fires.');
+    
+    this.state = ({
+      value: 0,
+      user:{
+        local: {
+          userName: {userName: ''},
+          firstName: {firstName: ''},
+          lastName: {lastName: ''},
+          joinDate: {joinDate: ''},
+          email: {email: ''},
+        },
+        Mints: []
+      }
+    });
+    
   }
 
-  state = {
-    value: 0,
-  };
+  componentDidMount(){
+    console.log('searching for: ' + this.props.match.params.uid);
+    fetch('/api/SearchUser', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            user: this.props.match.params.uid
+        })
+    }).then(function (response) {
+        return response.json();
+    }).then(function (data) {
+        console.log('search successful.');
+        console.log(data);
+        this.setState({
+            user: data
+        });
+    }.bind(this));
+
+    console.log('componentDidMount fires');
+    
+  }
 
   handleChange = (event, value) => {
     this.setState({ value });
@@ -224,18 +262,18 @@ class User extends React.Component {
   render() {
     const { classes, theme } = this.props;
 
-    console.log(this.props.match.params);
     return (
       <div className={classes.root}>
         <AppBar position="static" color="default">
 
-          <h1 className='pageTitle'>{this.props.match.params.uid}</h1>
+          <h1 className='pageTitle'>{this.state.user.local.userName.username}</h1>
           <span style={{width: 40}}>
             <Avatar style={{verticalAlign: 'middle', marginRight: 10}} src="../assets/img/user1.jpg" />
           </span>
           <span style={{width: 200}}>
-            <strong>User Name:</strong>{this.props.match.params.name}<br/>          
-            <strong>Member Since:</strong> {this.props.match.params.joinDate}<br/>
+            <strong>Name:</strong>{this.state.user.local.firstName.firstName + ' ' + this.state.user.local.lastName.lastName}<br/>  
+            <strong>Email:</strong> {this.state.user.local.email.email}<br/>        
+            <strong>Member Since:</strong> {this.state.user.local.joinDate.joinDate}<br/>
           </span>
           
           <Tabs
@@ -298,11 +336,10 @@ class User extends React.Component {
         >
         
         {
-          images.map(function(item, i){            
-            return <Mint key={i} src={item.src} description={item.description}/>
+          this.state.user.Mints.map(function(item, i){            
+            return <Mint key={i} src={item.src} mintId={item._id}/>
           })
         }
-          <Mint src={images[0].src}/>
 
             </Masonry>
           </TabContainer>

@@ -34,27 +34,56 @@ const styles = theme => ({
     }
 });
 
-const currencies = [
-  {
-    value: 'USD',
-    label: '$',
-  },
-  {
-    value: 'EUR',
-    label: '€',
-  },
-  {
-    value: 'BTC',
-    label: '฿',
-  },
-  {
-    value: 'JPY',
-    label: '¥',
-  },
-];
-
 class NewMint extends React.Component {
-    state = {};
+    constructor(){
+        super();
+
+        this.state = {
+            title: '',
+            href: '',
+            link: '',
+            description: ''
+        };
+
+        this.handleChangeTitle = this.handleChangeTitle.bind(this);
+        this.handleChangeHref = this.handleChangeHref.bind(this);
+        this.handleChangeLink = this.handleChangeLink.bind(this);
+        this.handleChangeDescription = this.handleChangeDescription.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleChangeTitle (event){
+        this.setState({title: event.target.value});
+    }
+
+    handleChangeHref (event){
+        this.setState({href: event.target.value});
+    }
+
+    handleChangeLink (event){
+        this.setState({link: event.target.value});
+    }
+
+    handleChangeDescription (event){
+        this.setState({description: event.target.value});
+    }
+
+    handleSubmit (){
+        fetch('/api/AddMint', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.state)
+        }).then(function(response) {
+            return response.json();
+        }).then(function(data) {
+            //self.setState({user: data});
+            console.log(data.message);
+        });
+    }
+    
 
     render() {
         const { classes } = this.props;
@@ -63,41 +92,44 @@ class NewMint extends React.Component {
         <form className={classes.container} noValidate autoComplete="off">
         
             <Paper className={classes.root} elevation={3}>
-                <Typography className="pageTitle">
-                    <h3>Add a New Mint!</h3>
-                </Typography>
-                <TextField
-                    id="title"
-                    label="Mint Title"
-                    className={classes.textField}
-                    margin="normal"
-                />
-                <TextField
-                    id="href"
-                    label="*&nbsp;Image HREF"
-                    className={classes.textField}
-                    margin="normal"
-                />
-                <TextField
-                    id="link"
-                    label="Link"
-                    className={classes.textField}
-                    margin="normal"
-                />
-                <TextField
-                    id="description"
-                    label="Description"
-                    className={classes.textField}
-                    margin="normal"
-                    multiline
-                />
-                <Typography className="pageTitle" style={{textAlign: 'left'}}>
-                    * Required
-                </Typography>
-                <Button variant="contained" color="secondary" className={classes.button}>
-                    Add Mint
-                </Button>
-            </Paper>
+            <h3 className="pageTitle">Add a New Mint!</h3>
+            
+            <TextField
+                id="title"
+                label="Mint Title"
+                className={classes.textField}
+                margin="normal"
+                onChange={this.handleChangeTitle}
+            />
+            <TextField
+                id="href"
+                label="*&nbsp;Image HREF"
+                className={classes.textField}
+                margin="normal"
+                onChange={this.handleChangeHref}
+            />
+            <TextField
+                id="link"
+                label="Link"
+                className={classes.textField}
+                margin="normal"
+                onChange={this.handleChangeLink}
+            />
+            <TextField
+                id="description"
+                label="Description"
+                className={classes.textField}
+                margin="normal"
+                multiline
+                onChange={this.handleChangeDescription}
+            />
+            <Typography className="pageTitle" style={{textAlign: 'left'}}>
+                * Required
+            </Typography>
+            <Button variant="contained" color="secondary" className={classes.button} onClick={this.handleSubmit}>
+                Add Mint
+            </Button>
+        </Paper>
 
       </form>
     );

@@ -207,15 +207,6 @@ const styles = theme => ({
         paddingBottom: 0,
         paddingLeft: 15,
         paddingRight: 15
-    },
-    subContainer:{
-        width: 600,
-        paddingTop: 15,
-        paddingBottom: 20,
-        paddingLeft: 20,
-        paddingRight: 20,
-        marginLeft: 'auto',
-        marginRight: 'auto',
     }
 
 });
@@ -224,11 +215,70 @@ class User extends React.Component {
   
     constructor(props) {
         super(props);
+
+        
+        this.state={
+            userName: '',
+            showUserName: false,
+            firstName: '',
+            showFirstName: false,
+            lastName: '',
+            showLastName: false,
+            email: '',
+            showEmail: false,
+            joinDate: '',
+            showJoinDate: false,
+            showMints: false,
+            value: 0
+        }
+
+        this.handleChangeShowUserName = this.handleChangeShowUserName.bind(this);
+        this.handleChangeShowLastName = this.handleChangeShowLastName.bind(this);
+        this.handleChangeShowFirstName = this.handleChangeShowFirstName.bind(this); 
+        this.handleChangeShowEmail = this.handleChangeShowEmail.bind(this); 
+        this.handleChangeShowJoinDate = this.handleChangeShowJoinDate.bind(this); 
+        this.handleChangeShowMints = this.handleChangeShowMints.bind(this); 
     }
   
-    state = {
-        value: 0,
-    };
+    componentDidMount(){
+        fetch('/api/getUser', 
+            {
+                method: 'GET',
+                headers: 
+                {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }).then(function(response) {
+                return response.json();
+            }).then(function(data) {
+                if(data.isSignedUp){
+                    console.log('sign in success');
+                    console.log('this');
+                    console.log(this);
+                    console.log('--------------');
+                    this.setState({
+                        userName: data.local.userName.userName,
+                        showUserName: data.local.userName.public,
+                        firstName: data.local.firstName.firstName,
+                        showFirstName: data.local.firstName.public,
+                        lastName: data.local.lastName.lastName,
+                        showLastName: data.local.lastName.public,
+                        email: data.local.email.email,
+                        showEmail: data.local.email.public,
+                        joinDate: data.local.joinDate.joinDate,
+                        showJoinDate: data.local.joinDate.public,
+                        showMints: data.showMints,
+                        value: 0
+                    });
+                }
+                else{
+                    //console.log('attempting to reset form');
+                    //console.log('data' + JSON.stringify(data));
+                    this.props.history.push('/SignIn');                    
+                }
+        }.bind(this));
+    }
   
     handleChange = (event, value) => {
         this.setState({ value });
@@ -237,11 +287,145 @@ class User extends React.Component {
     handleChangeIndex = index => {
         this.setState({ value: index });
     };
+
+    handleChangeShowFirstName(){
+        console.log('/api/ChangeShowFirstName.')
+
+        fetch('/api/ChangeShowFirstName/', 
+            {
+                method: 'POST',
+                headers: 
+                {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    showFirstName: !this.state.showFirstName
+                })
+            }).then(function(response) {
+                return response.json();
+            }).then(function(data) {
+                console.log(data);
+                this.setState({showFirstName: !this.state.showFirstName});
+            }.bind(this));
+    }
+
+    handleChangeShowLastName(){
+        console.log('/api/ChangeShowLastName.')
+
+        fetch('/api/ChangeShowLastName/', 
+            {
+                method: 'POST',
+                headers: 
+                {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    showLastName: !this.state.showLastName
+                })
+            }).then(function(response) {
+                return response.json();
+            }).then(function(data) {
+                console.log(data);
+                this.setState({showLastName: !this.state.showLastName});
+            }.bind(this));
+    }
+
+    handleChangeShowUserName(){
+        
+        console.log('/api/ChangeShowUserName.')
+
+        fetch('/api/ChangeShowUserName/', 
+            {
+                method: 'POST',
+                headers: 
+                {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    showUserName: !this.state.showUserName
+                })
+            }).then(function(response) {
+                return response.json();
+            }).then(function(data) {
+                console.log(data);
+                this.setState({showUserName: !this.state.showUserName});
+            }.bind(this));
+        
+        
+    }
+
+    handleChangeShowEmail(){
+        console.log('/api/ChangeShowEmail.')
+
+        fetch('/api/ChangeShowEmail/', 
+            {
+                method: 'POST',
+                headers: 
+                {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    showEmail: !this.state.showEmail
+                })
+            }).then(function(response) {
+                return response.json();
+            }).then(function(data) {
+                console.log(data);
+                this.setState({showEmail: !this.state.showEmail});
+            }.bind(this));
+    }
+
+    handleChangeShowJoinDate(){
+        console.log('/api/ChangeShowJoinDate.')
+
+        fetch('/api/ChangeShowJoinDate/', 
+            {
+                method: 'POST',
+                headers: 
+                {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    showJoinDate: !this.state.showJoinDate
+                })
+            }).then(function(response) {
+                return response.json();
+            }).then(function(data) {
+                console.log(data);
+                this.setState({showJoinDate: !this.state.showJoinDate});
+            }.bind(this));
+    }
+
+    handleChangeShowMints(){
+        console.log('/api/ChangeShowMints.')
+
+        fetch('/api/ChangeShowMints/', 
+            {
+                method: 'POST',
+                headers: 
+                {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    showMints: !this.state.showMints
+                })
+            }).then(function(response) {
+                return response.json();
+            }).then(function(data) {
+                console.log(data);
+                this.setState({showMints: !this.state.showMints});
+            }.bind(this));
+    }
   
     render() {
         const { classes, theme } = this.props;
   
-        console.log(this.props.match.params);
         return (
             <div className={classes.root}>
                 <AppBar position="static" color="default">
@@ -277,7 +461,7 @@ class User extends React.Component {
                 >
                     <TabContainer dir={theme.direction}>
                     
-                        <Paper  className={classes.subContainer}>
+                        <Paper  className='subContainer'>
                         
                         
                             <h1>Settings</h1>
@@ -288,15 +472,30 @@ class User extends React.Component {
                                     <FormControlLabel
                                         control={
                                             <Switch
-                                                value="name"
+                                                onChange = {this.handleShowFirstNameChange}
+                                                value="firstName"
+                                                onChange={this.handleChangeShowFirstName}
+                                                checked={this.state.showFirstName}
                                             />
                                         }
-                                        label="Name"
+                                        label="First Name"
+                                    />
+                                    <FormControlLabel
+                                        control={
+                                            <Switch
+                                                value="lastName"
+                                                onChange={this.handleChangeShowLastName}
+                                                checked={this.state.showLastName}
+                                            />
+                                        }
+                                        label="Last Name"
                                     />
                                     <FormControlLabel
                                         control={
                                             <Switch
                                                 value="userName"
+                                                onChange={this.handleChangeShowUserName}
+                                                checked={this.state.showUserName}
                                             />
                                         }
                                         label="User Name"
@@ -305,6 +504,8 @@ class User extends React.Component {
                                         control={
                                             <Switch
                                                 value="email"
+                                                onChange={this.handleChangeShowEmail}
+                                                checked={this.state.showEmail}
                                             />
                                         }
                                         label="Email"
@@ -313,6 +514,8 @@ class User extends React.Component {
                                         control={
                                             <Switch
                                                 value="joinDate"
+                                                onChange={this.handleChangeShowJoinDate}
+                                                checked={this.state.showJoinDate}
                                             />
                                         }
                                         label="Join Date"
@@ -321,6 +524,8 @@ class User extends React.Component {
                                         control={
                                             <Switch
                                                 value="mints"
+                                                onChange={this.handleChangeShowMints}
+                                                checked={this.state.showMints}
                                             />
                                         }
                                         label="Mints"
@@ -332,7 +537,7 @@ class User extends React.Component {
                     </TabContainer>
           
                     <TabContainer dir={theme.direction}>
-                        <Paper  className={classes.subContainer}>
+                        <Paper  className='subContainer'>
                             <h1>Followers ({followers.length})</h1>
                             {
                                 followers.map(
@@ -347,7 +552,7 @@ class User extends React.Component {
                         </Paper>
                     </TabContainer>
                     <TabContainer dir={theme.direction}>
-                        <Paper  className={classes.subContainer}>
+                        <Paper  className='subContainer'>
                             <h1>Following ({following.length})</h1>
                             {
                                 following.map(

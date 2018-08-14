@@ -48,9 +48,31 @@ const images=[
 ];
 
 class Home extends React.Component {
-    state = {
-    };
 
+  constructor(){
+    super();
+
+    this.state = {
+      Mints: []
+    };
+  }
+    
+  componentDidMount(){
+    fetch('/api/GetAllMints/', 
+    {
+      method: 'POST',
+      headers: 
+      {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }).then(function(response) {
+      return response.json();
+    }).then(function(data) {
+      console.log(data[0].Mints);
+      this.setState({Mints: data[0].Mints});
+    }.bind(this));
+  }
     
 
     render() {
@@ -63,12 +85,10 @@ class Home extends React.Component {
         >
         
         {
-          images.map(function(item, i){            
-            return <Mint key={i} src={item.src}/>
+          this.state.Mints.map(function(item, i){            
+            return <Mint key={i} src={item.src} owner={item.owner} mintId={item._id}/>
           })
         }
-          <Mint src={images[0].src}/>
-
         </Masonry>
         );
     }
