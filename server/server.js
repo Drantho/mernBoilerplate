@@ -53,121 +53,6 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 // API routes
 require('./routes')(app);
 
-app.post('/api/signup', passport.authenticate('local-signup', 
-    {
-      successRedirect: '/api/SignUpSuccess', // redirect to the secure profile section
-      failureRedirect: '/api/SignUpFail', // redirect back to the signup page if there is an error
-      failureFlash: true // allow flash messages
-    }
-  )
-);
-
-
-app.post('/api/SignIn', passport.authenticate('local-login', {        
-  successRedirect: '/api/signUpSuccess', // redirect to the secure profile section
-  failureRedirect: '/api/SignUpFail', // redirect back to the signup page if there is an error
-}));
-
-app.get('/api/SignUpSuccess', (req, res) =>{
-  console.log('SignUp success');
-  console.log(req.user);
-  res.json({signedUp: true, user: req.user});
-});
-
-app.get('/api/SignUpFail', (req, res) =>{
-  console.log('SignUp Fail');
-  console.log(null);
-  const message = req.flash().signUpMessage[0];
-  console.log('signup message: ' + message);
-  res.json({signedUp: false, message: message});
-});
-
-app.get('/api/getUser', (req, res) =>{
-  if(req.user)
-    res.json(req.user);
-
-  res.json({isSignedUp: false});
-})
-
-app.post('/api/ChangeShowUserName', (req, res) =>{
-  console.log('user: ' + req.user._id);
-  User.findByIdAndUpdate(req.user._id, {$set: {'local.userName.public': req.body.showUserName}}, (err, result) =>{
-    if(err){
-      console.log(er);
-      res.json({message: err});
-    }
-
-    console.log('showUserName set to ' + req.body.showUserName);
-    res.json({message: 'update successful showUserName set to ' + req.body.showUserName});
-  });
-});
-
-app.post('/api/ChangeShowLastName', (req, res) =>{
-  console.log('user: ' + req.user._id);
-  User.findByIdAndUpdate(req.user._id, {$set: {'local.lastName.public': req.body.showLastName}}, (err, result) =>{
-    if(err){
-      console.log(er);
-      res.json({message: err});
-    }
-
-    console.log('update successful showLastName set to ' + req.body.showLastName);
-    res.json({message: 'update successful showLastName set to ' + req.body.showLastName});
-  });
-});
-
-app.post('/api/ChangeShowFirstName', (req, res) =>{
-  console.log('user: ' + req.user._id);
-  User.findByIdAndUpdate(req.user._id, {$set: {'local.firstName.public': req.body.showFirstName}}, (err, result) =>{
-    if(err){
-      console.log(er);
-      res.json({message: err});
-    }
-
-    console.log('update successful showFirstName set to ' + req.body.showFirstName);
-    res.json({message: 'update successful showFirstName set to ' + req.body.showFirstName});
-  });
-});
-
-app.post('/api/ChangeShowEmail', (req, res) =>{
-  console.log('user: ' + req.user._id);
-  User.findByIdAndUpdate(req.user._id, {$set: {'local.email.public': req.body.showEmail}}, (err, result) =>{
-    if(err){
-      console.log(er);
-      res.json({message: err});
-    }
-
-    console.log('update successful showEmail set to ' + req.body.showEmail);
-    res.json({message: 'update successful showEmail set to ' + req.body.showEmail});
-  });
-});
-
-app.post('/api/ChangeShowJoinDate', (req, res) =>{
-  console.log('user: ' + req.user._id);
-  User.findByIdAndUpdate(req.user._id, {$set: {'local.joinDate.public': req.body.showJoinDate}}, (err, result) =>{
-    if(err){
-      console.log(er);
-      res.json({message: err});
-    }
-
-    console.log('update successful showJoinDate set to ' + req.body.showJoinDate);
-    res.json({message: 'update successful showJoinDate set to ' + req.body.showJoinDate});
-  });
-});
-
-app.post('/api/ChangeShowMints', (req, res) =>{
-  console.log('user: ' + req.user._id);
-  User.findByIdAndUpdate(req.user._id, {$set: {'showMints': req.body.showMints}}, (err, result) =>{
-    if(err){
-      console.log(er);
-      res.json({message: err});
-    }
-
-    console.log('update successful showMints set to ' + req.body.showMints);
-    res.json({message: 'update successful showMints set to ' + req.body.showMints});
-  });
-});
-
-
 if (isDev) {
   const compiler = webpack(webpackConfig);
 
@@ -197,6 +82,234 @@ if (isDev) {
     res.end();
   });
 }
+//===============================================================================================================================
+
+app.post('/api/SignIn', passport.authenticate('local-login', {        
+    successRedirect: '/api/signUpSuccess', // redirect to the secure profile section
+    failureRedirect: '/api/SignUpFail', // redirect back to the signup page if there is an error
+  }));
+
+//================================================================================================================================
+
+//const passport = require('passport')
+//const User = require('../../models/User');
+const ObjectId = require('mongodb').ObjectID;
+
+//module.exports = (app) => {
+    
+    app.post('/api/AddMint', (req, res) =>{
+        
+        let newMint = {
+
+            _id          : ObjectId(),
+            title        :  req.body.title,
+            src         : req.body.href,
+            link         : req.body.href,
+            description  : req.body.description,
+            categories   : [],
+            owner        : req.user._id
+
+        }
+
+        var newUser = new User();
+
+        User.findByIdAndUpdate(req.user._id, {$push: {Mints: newMint}},{safe: true}, (err, result) =>{
+            if(err){
+                console.log(er);
+                res.json({message: err});
+            }
+      
+            console.log('Mint added successfully');
+            res.json({message: 'Mint added successfully'});
+        });
+      
+    });
+
+    app.post('/api/GetAllMints', (req, res) =>{
+                
+        User.aggregate([
+            { 
+                $unwind : "$Mints"
+            }, 
+            { 
+                $group: 
+                { 
+                    _id: null, 
+                    Mints: { $push: "$Mints"  } 
+                }
+            } 
+        ], (err, result) =>{
+                if(err){
+                    console.log(err);
+                    res.json({message: err});
+                }
+      
+                console.log('Mints retrieved');
+                console.log(result);
+                res.json(result);
+            });
+     
+    });
+
+    app.post('/api/GetMint', (req, res) =>{
+                
+        User.aggregate([
+            {$unwind : "$Mints"},
+            {$match : {"Mints._id": ObjectId(req.body.mint)}},
+            {$project : { "_id" : req.body.mint, "title" : "$Mints.title", "src" : "$Mints.src", "link" : "$Mints.link","description" : "$Mints.description","categories" : "$Mints.categories", "owner": "$Mints.owner",}}
+        ], (err, result) =>{
+                if(err){
+                    console.log(err);
+                    res.json({message: err});
+                }
+      
+                console.log('searching mint ' + req.body.mint);
+                console.log('Mint retrieved');
+                console.log(result[0]);
+                res.json(result[0]);
+            });
+     
+    });
+
+//};
+
+//=============================================================================================================================
+
+//const passport = require('passport')
+//const User = require('../../models/User');
+
+//module.exports = (app) => {
+    
+    app.post('/api/ChangeShowUserName', (req, res) =>{
+        console.log('user: ' + req.user._id);
+        User.findByIdAndUpdate(req.user._id, {$set: {'local.userName.public': req.body.showUserName}}, (err, result) =>{
+            if(err){
+                console.log(er);
+                res.json({message: err});
+            }
+      
+            console.log('showUserName set to ' + req.body.showUserName);
+            res.json({message: 'update successful showUserName set to ' + req.body.showUserName});
+        });
+    });
+      
+    app.post('/api/ChangeShowLastName', (req, res) =>{
+        console.log('user: ' + req.user._id);
+        User.findByIdAndUpdate(req.user._id, {$set: {'local.lastName.public': req.body.showLastName}}, (err, result) =>{
+            if(err){
+                console.log(er);
+                res.json({message: err});
+            }
+      
+            console.log('update successful showLastName set to ' + req.body.showLastName);
+            res.json({message: 'update successful showLastName set to ' + req.body.showLastName});
+        });
+    });
+      
+    app.post('/api/ChangeShowFirstName', (req, res) =>{
+        console.log('user: ' + req.user._id);
+        User.findByIdAndUpdate(req.user._id, {$set: {'local.firstName.public': req.body.showFirstName}}, (err, result) =>{
+            if(err){
+                console.log(er);
+                res.json({message: err});
+            }
+      
+            console.log('update successful showFirstName set to ' + req.body.showFirstName);
+            res.json({message: 'update successful showFirstName set to ' + req.body.showFirstName});
+        });
+    });
+      
+    app.post('/api/ChangeShowEmail', (req, res) =>{
+        console.log('user: ' + req.user._id);
+        User.findByIdAndUpdate(req.user._id, {$set: {'local.email.public': req.body.showEmail}}, (err, result) =>{
+            if(err){
+                console.log(er);
+                res.json({message: err});
+            }
+      
+            console.log('update successful showEmail set to ' + req.body.showEmail);
+            res.json({message: 'update successful showEmail set to ' + req.body.showEmail});
+        });
+    });
+      
+    app.post('/api/ChangeShowJoinDate', (req, res) =>{
+        console.log('user: ' + req.user._id);
+        User.findByIdAndUpdate(req.user._id, {$set: {'local.joinDate.public': req.body.showJoinDate}}, (err, result) =>{
+            if(err){
+                console.log(er);
+                res.json({message: err});
+            }
+      
+            console.log('update successful showJoinDate set to ' + req.body.showJoinDate);
+            res.json({message: 'update successful showJoinDate set to ' + req.body.showJoinDate});
+        });
+    });
+      
+    app.post('/api/ChangeShowMints', (req, res) =>{
+        console.log('user: ' + req.user._id);
+        User.findByIdAndUpdate(req.user._id, {$set: {'showMints': req.body.showMints}}, (err, result) =>{
+            if(err){
+                console.log(er);
+                res.json({message: err});
+            }
+      
+            console.log('update successful showMints set to ' + req.body.showMints);
+            res.json({message: 'update successful showMints set to ' + req.body.showMints});
+        });
+    });
+
+//};
+
+//=============================================================================================================
+
+app.post('/api/signup', passport.authenticate('local-signup', 
+    {
+        successRedirect: '/api/SignUpSuccess', // redirect to the secure profile section
+        failureRedirect: '/api/SignUpFail', // redirect back to the signup page if there is an error
+        failureFlash: true // allow flash messages
+    }));
+
+    app.get('/api/SignUpSuccess', (req, res) =>{
+        console.log('SignUp success');
+        console.log(req.user);
+        res.json({signedUp: true, user: req.user});
+    });
+      
+    app.get('/api/SignUpFail', (req, res) =>{
+        console.log('SignUp Fail');
+        console.log(null);
+        const message = req.flash().signUpMessage[0];
+        console.log('signup message: ' + message);
+        res.json({signedUp: false, message: message});
+    });
+
+///=====================================================================================================================
+
+app.get('/api/getUser', (req, res) =>{
+    if(req.user)
+        res.json(req.user);
+  
+    res.json({isSignedUp: false});
+});
+
+app.post('/api/SearchUser', (req, res) =>{
+    
+    console.log(req.body);
+
+    User.findOne({$or:[{ '_id' :  req.body.user },{'local.userName.userName': req.body.user}]}, (err, data) => {
+        if(err){
+            console.log(err);
+            res.json(err);
+        }            
+
+        console.log(data);
+        res.json(data);
+    });
+    
+});
+
+//========================================================================================================
+
 
 app.listen(port, '0.0.0.0', (err) => {
   if (err) {
